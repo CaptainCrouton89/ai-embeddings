@@ -23,3 +23,7 @@
 - Implemented new API endpoint (store-conversation-embedding.ts) for storing conversation embeddings
 - Implemented new API endpoint (search-conversation-embeddings.ts) for semantically searching conversation history
 - Added support for context retrieval to get messages surrounding matched content in conversations
+- Created ConversationEmbeddingGenerator component with dynamic message form for storing conversations
+- Created ConversationSearch component with configurable search parameters and context display
+- Created ConversationEmbeddingsHistory component to view and manage stored conversations
+- Updated main UI with separate tabs for document and conversation embeddings

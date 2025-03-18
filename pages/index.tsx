@@ -1,3 +1,6 @@
+import { ConversationEmbeddingGenerator } from '@/components/ConversationEmbeddingGenerator'
+import { ConversationEmbeddingsHistory } from '@/components/ConversationEmbeddingsHistory'
+import { ConversationSearch } from '@/components/ConversationSearch'
 import { EmbeddingGenerator } from '@/components/EmbeddingGenerator'
 import { EmbeddingsHistory } from '@/components/EmbeddingsHistory'
 import { SimpleSearch } from '@/components/SimpleSearch'
@@ -28,20 +31,48 @@ export default function Home() {
           <ThemeToggle />
         </div>
 
-        <Tabs defaultValue="search" className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
-            <TabsTrigger value="search">Search</TabsTrigger>
-            <TabsTrigger value="generate">Generate</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
+        <Tabs defaultValue="document-search" className="w-full">
+          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-6">
+            <TabsTrigger value="document-search" className="whitespace-nowrap">
+              Document Search
+            </TabsTrigger>
+            <TabsTrigger value="document-generate" className="whitespace-nowrap">
+              Document Generate
+            </TabsTrigger>
+            <TabsTrigger value="document-history" className="whitespace-nowrap">
+              Document History
+            </TabsTrigger>
+            <TabsTrigger value="conversation-search" className="whitespace-nowrap">
+              Chat Search
+            </TabsTrigger>
+            <TabsTrigger value="conversation-generate" className="whitespace-nowrap">
+              Chat Generate
+            </TabsTrigger>
+            <TabsTrigger value="conversation-history" className="whitespace-nowrap">
+              Chat History
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="search" className="mt-6">
+
+          {/* Document Embeddings */}
+          <TabsContent value="document-search" className="mt-6">
             <SimpleSearch />
           </TabsContent>
-          <TabsContent value="generate" className="mt-6">
+          <TabsContent value="document-generate" className="mt-6">
             <EmbeddingGenerator />
           </TabsContent>
-          <TabsContent value="history" className="mt-6">
+          <TabsContent value="document-history" className="mt-6">
             <EmbeddingsHistory />
+          </TabsContent>
+
+          {/* Conversation Embeddings */}
+          <TabsContent value="conversation-search" className="mt-6">
+            <ConversationSearch />
+          </TabsContent>
+          <TabsContent value="conversation-generate" className="mt-6">
+            <ConversationEmbeddingGenerator />
+          </TabsContent>
+          <TabsContent value="conversation-history" className="mt-6">
+            <ConversationEmbeddingsHistory />
           </TabsContent>
         </Tabs>
       </main>
