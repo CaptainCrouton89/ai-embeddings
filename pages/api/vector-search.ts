@@ -1,16 +1,16 @@
-import type { NextRequest } from 'next/server'
+import { ApplicationError, UserError } from '@/lib/errors'
 import { createClient } from '@supabase/supabase-js'
+import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { codeBlock, oneLine } from 'common-tags'
 import GPT3Tokenizer from 'gpt3-tokenizer'
+import type { NextRequest } from 'next/server'
 import {
-  Configuration,
-  OpenAIApi,
-  CreateModerationResponse,
-  CreateEmbeddingResponse,
   ChatCompletionRequestMessage,
+  Configuration,
+  CreateEmbeddingResponse,
+  CreateModerationResponse,
+  OpenAIApi,
 } from 'openai-edge'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { ApplicationError, UserError } from '@/lib/errors'
 
 const openAiKey = process.env.OPENAI_KEY
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -43,7 +43,7 @@ export default async function handler(req: NextRequest) {
       throw new UserError('Missing request data')
     }
 
-    const { prompt: query } = requestData
+    const { prompt: query, match_count = 10 } = requestData
 
     if (!query) {
       throw new UserError('Missing query in request data')
@@ -85,7 +85,7 @@ export default async function handler(req: NextRequest) {
       {
         embedding,
         match_threshold: 0.78,
-        match_count: 10,
+        match_count,
         min_content_length: 50,
       }
     )
@@ -104,7 +104,7 @@ export default async function handler(req: NextRequest) {
       const encoded = tokenizer.encode(content)
       tokenCount += encoded.text.length
 
-      if (tokenCount >= 1500) {
+      if (tokenCount >= 8000) {
         break
       }
 

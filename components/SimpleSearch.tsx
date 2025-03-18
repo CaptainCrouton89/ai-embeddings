@@ -8,13 +8,18 @@ import * as React from 'react'
 
 export function SimpleSearch() {
   const [query, setQuery] = React.useState<string>('')
+  const [matchCount, setMatchCount] = React.useState<number>(10)
   const { complete, completion, isLoading, error } = useCompletion({
     api: '/api/vector-search',
   })
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    complete(query)
+    complete(query, {
+      body: {
+        match_count: matchCount,
+      },
+    })
   }
 
   return (
@@ -27,6 +32,17 @@ export function SimpleSearch() {
             onChange={(e) => setQuery(e.target.value)}
             className="flex-1"
           />
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-500">Results:</span>
+            <Input
+              type="number"
+              min="1"
+              max="50"
+              value={matchCount}
+              onChange={(e) => setMatchCount(parseInt(e.target.value) || 10)}
+              className="w-20"
+            />
+          </div>
           <Button type="submit" disabled={isLoading || !query}>
             Search
           </Button>

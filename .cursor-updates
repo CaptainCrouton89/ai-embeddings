@@ -13,3 +13,5 @@
 - Fixed bug in generate-embeddings.ts API endpoint that was causing "undefined is not iterable" errors when processing OpenAI embedding responses
 - Improved error handling for embedding generation with better validation of API responses
 - Replaced complex SearchDialog with a simplified SimpleSearch component that has just an input field and search button.
+- Added match_count parameter to vector-search API endpoint for customizable result count
+- Updated SimpleSearch component to allow customizing the number of results via match_count parameter
