@@ -1,13 +1,10 @@
 import { EmbeddingGenerator } from '@/components/EmbeddingGenerator'
 import { EmbeddingsHistory } from '@/components/EmbeddingsHistory'
-import { SearchDialog } from '@/components/SearchDialog'
+import { SimpleSearch } from '@/components/SimpleSearch'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Inter } from 'next/font/google'
 import Head from 'next/head'
-import Image from 'next/image'
-import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,10 +34,8 @@ export default function Home() {
             <TabsTrigger value="generate">Generate</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
-          <TabsContent value="search" className="mt-6 flex justify-center">
-            <div className="w-full max-w-2xl">
-              <SearchDialog />
-            </div>
+          <TabsContent value="search" className="mt-6">
+            <SimpleSearch />
           </TabsContent>
           <TabsContent value="generate" className="mt-6">
             <EmbeddingGenerator />
@@ -49,36 +44,6 @@ export default function Home() {
             <EmbeddingsHistory />
           </TabsContent>
         </Tabs>
-
-        <Separator className="my-8" />
-
-        <div className="py-6 w-full flex items-center justify-center space-x-6">
-          <div className="opacity-75 transition hover:opacity-100 cursor-pointer">
-            <Link href="https://supabase.com" className="flex items-center justify-center">
-              <p className="text-base mr-2">Built with Supabase</p>
-              <Image src={'/supabase.svg'} width="20" height="20" alt="Supabase logo" />
-            </Link>
-          </div>
-          <div className="border-l border-gray-300 dark:border-gray-700 w-1 h-4" />
-          <div className="flex items-center justify-center space-x-4">
-            <div className="opacity-75 transition hover:opacity-100 cursor-pointer">
-              <Link
-                href="https://github.com/supabase/supabase"
-                className="flex items-center justify-center"
-              >
-                <Image src={'/github.svg'} width="20" height="20" alt="Github logo" />
-              </Link>
-            </div>
-            <div className="opacity-75 transition hover:opacity-100 cursor-pointer">
-              <Link
-                href="https://twitter.com/supabase"
-                className="flex items-center justify-center"
-              >
-                <Image src={'/twitter.svg'} width="20" height="20" alt="Twitter logo" />
-              </Link>
-            </div>
-          </div>
-        </div>
       </main>
     </>
   )
