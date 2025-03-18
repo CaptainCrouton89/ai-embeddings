@@ -27,3 +27,10 @@
 - Created ConversationSearch component with configurable search parameters and context display
 - Created ConversationEmbeddingsHistory component to view and manage stored conversations
 - Updated main UI with separate tabs for document and conversation embeddings
+
+## May 24, 2024
+
+- Removed userId field from conversation embedding components and API endpoints to match Supabase schema changes
+- Updated ConversationEmbeddingGenerator form to remove userId input field
+- Modified ConversationEmbeddingsHistory to no longer display or filter by userId
+- Updated store-conversation-embedding.ts and search-conversation-embeddings.ts APIs to remove userId references

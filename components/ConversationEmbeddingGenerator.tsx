@@ -30,7 +30,6 @@ const messageSchema = z.object({
 
 const formSchema = z.object({
   conversationId: z.string().min(1, { message: 'Conversation ID is required' }),
-  userId: z.string().optional(),
   title: z.string().optional(),
   summary: z.string().optional(),
   messages: z.array(messageSchema).min(1, { message: 'At least one message is required' }),
@@ -46,7 +45,6 @@ export function ConversationEmbeddingGenerator() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       conversationId: '',
-      userId: '',
       title: '',
       summary: '',
       messages: [
@@ -103,37 +101,20 @@ export function ConversationEmbeddingGenerator() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="conversationId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Conversation ID</FormLabel>
-                    <FormControl>
-                      <Input placeholder="conv_123456" {...field} />
-                    </FormControl>
-                    <FormDescription>A unique identifier for this conversation</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="userId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>User ID (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="user_123456" {...field} />
-                    </FormControl>
-                    <FormDescription>The user who owns this conversation</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="conversationId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Conversation ID</FormLabel>
+                  <FormControl>
+                    <Input placeholder="conv_123456" {...field} />
+                  </FormControl>
+                  <FormDescription>A unique identifier for this conversation</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="grid grid-cols-2 gap-4">
               <FormField

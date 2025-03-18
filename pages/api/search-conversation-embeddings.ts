@@ -16,7 +16,6 @@ export const runtime = 'edge'
 
 interface SearchParams {
   query: string
-  userId?: string
   conversationId?: string
   matchCount?: number
   matchThreshold?: number
@@ -84,7 +83,6 @@ export default async function handler(req: NextRequest) {
 
     const {
       query,
-      userId,
       conversationId,
       matchCount = 5,
       matchThreshold = 0.7,
@@ -157,28 +155,7 @@ export default async function handler(req: NextRequest) {
       throw new ApplicationError('Failed to match conversation messages', matchError)
     }
 
-    // If no userId is specified, return all matches
     let filteredMatches: MessageMatch[] | EnrichedMatch[] = matchingMessages as MessageMatch[]
-
-    // If userId is specified, filter by user
-    if (userId) {
-      // Get all conversation IDs that belong to the user
-      const { data: userConversations, error: userConversationsError } = await supabaseClient
-        .from('conversation_history')
-        .select('id')
-        .eq('user_id', userId)
-
-      if (userConversationsError) {
-        throw userConversationsError
-      }
-
-      const userConversationIds = userConversations.map((c) => c.id)
-
-      // Filter matches to only those from the user's conversations
-      filteredMatches = (matchingMessages as MessageMatch[]).filter((match: MessageMatch) =>
-        userConversationIds.includes(match.conversation_id)
-      )
-    }
 
     // If includeContext is true, fetch the messages before and after each match
     if (includeContext && filteredMatches.length > 0) {

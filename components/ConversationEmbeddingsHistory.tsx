@@ -24,7 +24,6 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 interface ConversationData {
   id: string
   conversation_id: string
-  user_id: string | null
   title: string | null
   summary: string | null
   created_at: string
@@ -46,7 +45,6 @@ export function ConversationEmbeddingsHistory() {
           `
           id, 
           conversation_id,
-          user_id,
           title,
           summary,
           created_at,
@@ -63,7 +61,6 @@ export function ConversationEmbeddingsHistory() {
       const transformedData: ConversationData[] = conversationsData.map((conversation) => ({
         id: conversation.id,
         conversation_id: conversation.conversation_id,
-        user_id: conversation.user_id,
         title: conversation.title,
         summary: conversation.summary,
         created_at: conversation.created_at,
@@ -151,11 +148,6 @@ export function ConversationEmbeddingsHistory() {
                   <TableRow key={conversation.id}>
                     <TableCell className="font-medium max-w-[200px] truncate">
                       {conversation.conversation_id}
-                      {conversation.user_id && (
-                        <span className="block text-xs text-gray-500">
-                          User: {conversation.user_id}
-                        </span>
-                      )}
                     </TableCell>
                     <TableCell>
                       {conversation.title || 'Untitled'}

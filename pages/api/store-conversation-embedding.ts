@@ -21,7 +21,6 @@ interface ConversationMessage {
 
 interface ConversationData {
   conversationId: string
-  userId?: string
   title?: string
   summary?: string
   messages: ConversationMessage[]
@@ -62,8 +61,7 @@ export default async function handler(req: NextRequest) {
       throw new UserError('Missing request data')
     }
 
-    const { conversationId, userId, title, summary, messages, metadata } =
-      requestData as ConversationData
+    const { conversationId, title, summary, messages, metadata } = requestData as ConversationData
 
     if (!conversationId) {
       throw new UserError('Missing conversationId in request data')
@@ -86,7 +84,6 @@ export default async function handler(req: NextRequest) {
       .upsert(
         {
           conversation_id: conversationId,
-          user_id: userId,
           title,
           summary,
           metadata,
