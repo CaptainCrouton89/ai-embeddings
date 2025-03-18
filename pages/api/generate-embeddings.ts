@@ -53,7 +53,7 @@ export default async function handler(req: NextRequest) {
       throw new UserError('Missing request data')
     }
 
-    const { content, type = 'custom', source = 'api', path, parentPath, meta } = requestData
+    const { content, type = 'markdown', source = 'api', path, parentPath, meta } = requestData
 
     if (!content) {
       throw new UserError('Missing content in request data')
