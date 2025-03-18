@@ -1,0 +1,8 @@
+# Cursor Updates
+
+## March 18, 2023
+- Installed shadcn components (alert, button, card, dialog, form, input, label, separator, skeleton, tabs, textarea, table)
+- Created EmbeddingGenerator component to easily create new embeddings via the API
+- Created EmbeddingsHistory component to view existing embeddings in the database
+- Added theme support with ThemeToggle for light/dark mode
+- Refactored index page with tabs for search, generate, and history functions 
