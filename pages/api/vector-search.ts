@@ -1,11 +1,8 @@
 import { ApplicationError, UserError } from '@/lib/errors'
 import { createClient } from '@supabase/supabase-js'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { codeBlock, oneLine } from 'common-tags'
 import GPT3Tokenizer from 'gpt3-tokenizer'
 import type { NextRequest } from 'next/server'
 import {
-  ChatCompletionRequestMessage,
   Configuration,
   CreateEmbeddingResponse,
   CreateModerationResponse,
@@ -104,56 +101,58 @@ export default async function handler(req: NextRequest) {
       const encoded = tokenizer.encode(content)
       tokenCount += encoded.text.length
 
-      if (tokenCount >= 8000) {
+      if (tokenCount >= 5000) {
         break
       }
 
       contextText += `${content.trim()}\n---\n`
     }
 
-    const prompt = codeBlock`
-      ${oneLine`
-        You are a very enthusiastic Supabase representative who loves
-        to help people! Given the following sections from the Supabase
-        documentation, answer the question using only that information,
-        outputted in markdown format. If you are unsure and the answer
-        is not explicitly written in the documentation, say
-        "Sorry, I don't know how to help with that."
-      `}
+    return new Response(JSON.stringify({ contextText }))
 
-      Context sections:
-      ${contextText}
+    // const prompt = codeBlock`
+    //   ${oneLine`
+    //     You are a very enthusiastic Supabase representative who loves
+    //     to help people! Given the following sections from the Supabase
+    //     documentation, answer the question using only that information,
+    //     outputted in markdown format. If you are unsure and the answer
+    //     is not explicitly written in the documentation, say
+    //     "Sorry, I don't know how to help with that."
+    //   `}
 
-      Question: """
-      ${sanitizedQuery}
-      """
+    //   Context sections:
+    //   ${contextText}
 
-      Answer as markdown (including related code snippets if available):
-    `
+    //   Question: """
+    //   ${sanitizedQuery}
+    //   """
 
-    const chatMessage: ChatCompletionRequestMessage = {
-      role: 'user',
-      content: prompt,
-    }
+    //   Answer as markdown (including related code snippets if available):
+    // `
 
-    const response = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [chatMessage],
-      max_tokens: 512,
-      temperature: 0,
-      stream: true,
-    })
+    // const chatMessage: ChatCompletionRequestMessage = {
+    //   role: 'user',
+    //   content: prompt,
+    // }
 
-    if (!response.ok) {
-      const error = await response.json()
-      throw new ApplicationError('Failed to generate completion', error)
-    }
+    // const response = await openai.createChatCompletion({
+    //   model: 'gpt-3.5-turbo',
+    //   messages: [chatMessage],
+    //   max_tokens: 512,
+    //   temperature: 0,
+    //   stream: true,
+    // })
 
-    // Transform the response into a readable stream
-    const stream = OpenAIStream(response)
+    // if (!response.ok) {
+    //   const error = await response.json()
+    //   throw new ApplicationError('Failed to generate completion', error)
+    // }
 
-    // Return a StreamingTextResponse, which can be consumed by the client
-    return new StreamingTextResponse(stream)
+    // // Transform the response into a readable stream
+    // const stream = OpenAIStream(response)
+
+    // // Return a StreamingTextResponse, which can be consumed by the client
+    // return new StreamingTextResponse(stream)
   } catch (err: unknown) {
     if (err instanceof UserError) {
       return new Response(
