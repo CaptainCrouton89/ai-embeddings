@@ -15,3 +15,11 @@
 - Replaced complex SearchDialog with a simplified SimpleSearch component that has just an input field and search button.
 - Added match_count parameter to vector-search API endpoint for customizable result count
 - Updated SimpleSearch component to allow customizing the number of results via match_count parameter
+
+## May 23, 2024
+
+- Created new Supabase table schema for storing conversation embeddings with proper indexes and RLS policies
+- Added conversation_history and conversation_message tables to efficiently store and retrieve conversation data
+- Implemented new API endpoint (store-conversation-embedding.ts) for storing conversation embeddings
+- Implemented new API endpoint (search-conversation-embeddings.ts) for semantically searching conversation history
+- Added support for context retrieval to get messages surrounding matched content in conversations
