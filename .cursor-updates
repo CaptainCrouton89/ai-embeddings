@@ -5,4 +5,8 @@
 - Created EmbeddingGenerator component to easily create new embeddings via the API
 - Created EmbeddingsHistory component to view existing embeddings in the database
 - Added theme support with ThemeToggle for light/dark mode
-- Refactored index page with tabs for search, generate, and history functions 
+- Refactored index page with tabs for search, generate, and history functions
+
+## May 22, 2024
+- Fixed bug in generate-embeddings.ts API endpoint that was causing "undefined is not iterable" errors when processing OpenAI embedding responses
+- Improved error handling for embedding generation with better validation of API responses 

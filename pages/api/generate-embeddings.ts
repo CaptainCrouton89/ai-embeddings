@@ -159,8 +159,23 @@ export default async function handler(req: NextRequest) {
           throw new ApplicationError('Failed to generate embedding', error)
         }
 
-        const { data: embeddingData } = await embeddingResponse.json()
-        const [responseData] = embeddingData.data
+        const embeddingData = await embeddingResponse.json()
+
+        if (
+          !embeddingData ||
+          !embeddingData.data ||
+          !Array.isArray(embeddingData.data) ||
+          embeddingData.data.length === 0
+        ) {
+          throw new ApplicationError('Invalid embedding response format', embeddingData)
+        }
+
+        const { embedding } = embeddingData.data[0]
+        const tokenCount = embeddingData.usage.total_tokens
+
+        if (!embedding) {
+          throw new ApplicationError('Missing embedding in response data', embeddingData.data[0])
+        }
 
         const { error: insertPageSectionError, data: pageSection } = await supabaseClient
           .from('nods_page_section')
@@ -169,8 +184,8 @@ export default async function handler(req: NextRequest) {
             slug,
             heading,
             content: sectionContent,
-            token_count: embeddingData.usage.total_tokens,
-            embedding: responseData.embedding,
+            token_count: tokenCount,
+            embedding,
           })
           .select()
           .limit(1)
