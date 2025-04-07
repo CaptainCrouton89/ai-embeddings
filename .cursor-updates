@@ -34,3 +34,4 @@
 - Updated ConversationEmbeddingGenerator form to remove userId input field
 - Modified ConversationEmbeddingsHistory to no longer display or filter by userId
 - Updated store-conversation-embedding.ts and search-conversation-embeddings.ts APIs to remove userId references
+- Fixed conversation history tab by adding better error handling and fixing environment variable issues

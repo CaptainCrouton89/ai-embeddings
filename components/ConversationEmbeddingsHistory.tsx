@@ -33,12 +33,21 @@ interface ConversationData {
 export function ConversationEmbeddingsHistory() {
   const [conversations, setConversations] = useState<ConversationData[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
+  // Create Supabase client with improved error handling
   const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '')
 
   const fetchConversations = async () => {
     setLoading(true)
+    setError(null)
     try {
+      console.log('Fetching conversations with Supabase URL:', supabaseUrl)
+
+      if (!supabaseUrl || !supabaseAnonKey) {
+        throw new Error('Supabase credentials not found')
+      }
+
       const { data: conversationsData, error } = await supabase
         .from('conversation_history')
         .select(
@@ -54,8 +63,15 @@ export function ConversationEmbeddingsHistory() {
         .order('created_at', { ascending: false })
 
       if (error) {
+        console.error('Supabase query error:', error)
         throw error
       }
+
+      if (!conversationsData) {
+        throw new Error('No data returned from Supabase')
+      }
+
+      console.log('Conversations data:', conversationsData)
 
       // Transform data to include message_count
       const transformedData: ConversationData[] = conversationsData.map((conversation) => ({
@@ -70,6 +86,7 @@ export function ConversationEmbeddingsHistory() {
       setConversations(transformedData)
     } catch (error) {
       console.error('Error fetching conversation embeddings:', error)
+      setError(error instanceof Error ? error.message : 'Failed to load conversation embeddings')
       toast.error('Failed to load conversation embeddings history')
     } finally {
       setLoading(false)
@@ -126,6 +143,13 @@ export function ConversationEmbeddingsHistory() {
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
+          </div>
+        ) : error ? (
+          <div className="text-center py-10 text-red-500">
+            <p>Error: {error}</p>
+            <p className="text-sm text-gray-500 mt-2">
+              Check your Supabase configuration and network connection.
+            </p>
           </div>
         ) : conversations.length === 0 ? (
           <div className="text-center py-10 text-gray-500">
